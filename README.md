@@ -29,6 +29,13 @@ This is where you should write a brief intruction to yout project.
 
 ## Team Members and Roles ##
 
+| Name  | Role |
+| ------------- | ------------- |
+| Nabeeha Ali  | Developer, UX Designer  |
+| Ethan McIntyre  | Developer, Sound Designer  |
+| Avery Smith  | Project Manager, 3D Artist, UX Designer |
+| Amy Truong  | 2D/3D Artist, UI/UX Designer  |
+
 - _Nabeeha Ali_
   - Developer
   - UX Designer 
