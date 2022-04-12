@@ -8,7 +8,7 @@ This is a virtual reality experience of time traveling through a canoe journey! 
 
 
 ## About This Project ##
-This project was completed in collaboration with Iohai:io students. The goal was to develop a virtual reality experience that fulfilled the following goals in relation to learning more about Akwesasne Mohawk culture:
+This project was completed in collaboration with Iohai:io students. The goal was to develop a virtual reality experience that fulfilled the following in relation to learning more about Akwesasne Mohawk culture:
 - [x] Show significance of giving thanks and being grateful no matter the situation
 - [x] Show people that they are resilient and understand what they went through
 - [x] Show the history and beauty of the culture of the natural environment.
