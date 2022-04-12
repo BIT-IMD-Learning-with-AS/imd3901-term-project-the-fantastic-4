@@ -13,8 +13,6 @@ This project was completed in collaboration with Iohai:io students. The goal was
 - [x] Show people that they are resilient and understand what they went through
 - [x] Show the history and beauty of the culture of the natural environment.
 
-Check out our **blog website** here: [The Fantastic 4 Development Blog](https://the-fantastic-4.wixsite.com/imd3901)
-
 ## How to Run This Project ##
 1. Download folder
 2. Open in Visual Studio Code
@@ -45,4 +43,4 @@ Check out our **blog website** here: [The Fantastic 4 Development Blog](https://
 | :man_artist: Avery Smith  | Project Manager, 3D Artist, UX Designer |
 | :woman_artist: Amy Truong  | 2D/3D Artist, UI/UX Designer  |
 
-
+Check out our **blog website** here: [The Fantastic 4 Development Blog](https://the-fantastic-4.wixsite.com/imd3901)
