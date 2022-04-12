@@ -7,7 +7,25 @@ This readme will be an introduction for your project. Please note how to use [Ma
 This is where you should write a brief intruction to yout project.
 
 ## How to Run This Project ##
-including instructions for running your project.
+1. Download this project.
+2. Open project folder in Visual Studio Code
+3. Open a new terminal
+4. Initialize via npm
+```html
+  npm init
+```
+5. Install via npm
+```html
+  npm install
+```
+6. Connect to app.js
+```html
+  node .\app.js
+```
+7. Type URL in browser
+```html
+  localhost:8080
+```
 
 ## Team Members and Roles ##
 
