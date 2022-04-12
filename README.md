@@ -31,23 +31,9 @@ This is where you should write a brief intruction to yout project.
 
 | Name  | Role |
 | ------------- | ------------- |
-| Nabeeha Ali  | Developer, UX Designer  |
-| Ethan McIntyre  | Developer, Sound Designer  |
-| Avery Smith  | Project Manager, 3D Artist, UX Designer |
-| Amy Truong  | 2D/3D Artist, UI/UX Designer  |
-
-- _Nabeeha Ali_
-  - Developer
-  - UX Designer 
-- _Ethan McIntyre_
-  - Developer 
-  - Sound Designer
-- _Avery Smith_
-  - Project Manager 
-  - 3D Artist
-  - UX Designer
-- _Amy Truong_
-  - 2D/3D Artist 
-  - UI/UX Designer
+| :woman_technologist: Nabeeha Ali  | Developer, UX Designer  |
+| :man_technologist: Ethan McIntyre  | Developer, Sound Designer  |
+| :man_artist: Avery Smith  | Project Manager, 3D Artist, UX Designer |
+| :woman_artist: Amy Truong  | 2D/3D Artist, UI/UX Designer  |
 
 
