@@ -23,7 +23,7 @@ This project was completed in collaboration with Iohai:io students. The goal was
 ```
 5. Install via npm
 ```html
-  npm install
+  npm install express
 ```
 6. Connect to app.js
 ```html
