@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+      <title>IMD 3901 Term Project</title>
+      <!-- js files and links -->
+      <meta name="description" content="IMD 3901 Term Project">
+      <script src="js/aframe.min.js"></script>
+      <script src="js/dist/aframe-particle-system-component.min.js"></script>
+      <script src="https://unpkg.com/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
+      <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.js"></script>
+      <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+      <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r134/examples/js/deprecated/Geometry.js"></script>
+      <script src="js/basket-popup.js"></script>
+      <script src="js/campfire.js"></script>
+      <script src="js/thanksgiving-address-data.js"></script>
+      <script src="js/thanksgiving.js"></script>
+      <script src="js/replace.js"></script>
+
+      <!-- styling -->
+      <link rel="stylesheet" href="css/land.css">
+    </head>
+
+    <body>
+      <!-- welcome popup -->
+      <div id="user-gesture-overlay">
+        <div id="continue-container" style="display: flex;">
+          <div class="continue-parent">
+            <div class="continue-child">
+              <img id="tree-icon" src="assets/2D illustrations/collection basket.png">
+            </div>
+            <div class="continue child continue-text">Proceed to the Thanksgiving Address: Ohen:ten Kariwatehkwen</div>
+            <div class="continue-child">
+              <button id="user-gesture-button" onClick="startThanksgivingScene();">Explore</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a-scene loading-screen="enabled: false">
+        <!-- assets -->
+        <a-assets>
+          <!-- audio -->
+          <audio id="late_forest_ambience" src="assets/sounds/late-forest-sfx.mp3" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="fire_sfx" src="assets/sounds/campfire-sfx.mp3" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="thanks_audio" src="assets/sounds/Thanks.m4a" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="river_sound" src="assets/sounds/river_noise.mp3" preload="auto" crossorigin="anonymous"></audio>
+
+          <!-- images -->
+          <img id="stars_img" src="assets/sky_stars.png">
+          <img id="basket_img" src="assets/2D illustrations/collection basket.png">
+          <img id="speaker_img" src="assets/speaker_icon.png">
+          <img id="sage_img" src="assets/2D illustrations/artifact_sage.png">
+          <img id="tobacco_img" src="assets/2D illustrations/artifact_tobacco plant.png">
+          <img id="strawberry_img" src="assets/2D illustrations/artifact_wild strawberry.png">
+
+          <!-- 3D models -->
+          <a-asset-item id="present_tree_model" response-type="arraybuffer" src="assets/tree env/present day tree bunch.gltf"></a-asset-item>
+          <a-asset-item id="rocks_model" response-type="arraybuffer" src="assets/campfire rocks/campfire rocks.gltf"></a-asset-item>
+            <!-- plants -->
+          <a-asset-item id="strawberry_model" response-type="arraybuffer" src="assets/wild strawberry plant/wild strawberry plant.gltf"></a-asset-item>
+          <a-asset-item id="tobacco_model" response-type="arraybuffer" src="assets/tobacco plant/tobacco plant.gltf"></a-asset-item>
+          <a-asset-item id="sage_model" response-type="arraybuffer" src="assets/sage plant/sage plant.gltf"></a-asset-item>
+
+            <!-- water -->
+          <img id="water" src="assets/water/water.png"/>
+          <img id="water-displacement" src="assets/water/displacement.jpg"/>
+            <!-- general -->
+          <a-asset-item id="basket_model" response-type="arraybuffer" src="assets/gltfs/basket.gltf"></a-asset-item>
+          <a-asset-item id="deer_model" response-type="arraybuffer" src="assets/low_poly_deer/scene.gltf"></a-asset-item>
+          <a-asset-item id="black_bear_model" response-type="arraybuffer" src="assets/low-poly_black_bear/scene.gltf"></a-asset-item>
+          <a-asset-item id="rabbit_model" response-type="arraybuffer" src="assets/low_poly_rabbit/scene.gltf"></a-asset-item>
+          <a-asset-item id="pigeon_model" response-type="arraybuffer" src="assets/gltfs/passengerPigeon.gltf"></a-asset-item>
+            <!-- terrain -->
+          <a-asset-item id="terrain_model" response-type="arraybuffer" src="assets/gltfs/canoeTerrain.gltf"></a-asset-item>
+          
+
+        </a-assets>
+
+        <!--Sound setup-->
+        <a-entity sound="src: #late_forest_ambience; autoplay:true; loop:true;"></a-entity>
+        <a-entity sound="src: #fire_sfx; autoplay:true; loop:true;"></a-entity>
+
+        <!-- environment -->
+        <a-entity environment="preset: forest; dressing: none; groundColor: #849324; groundColor2: #809324; lighting: none; skyColor: #000; horizonColor: #034a71"></a-entity>
+        <a-entity position="0 -10 0" particle-system="preset: dust; color: #c9eb09; size: 0.5; particleCount: 600; rotationAngleSpread: 360"></a-entity>
+        <a-entity geometry="primitive:sphere; radius: 70;" material="src: #stars_img; side: back; transparency: true; shader: flat;" animation__stars="property: material.opacity; from: 0.8  ; to: 0.9; dur: 50000; loop: true; dir: alternate"></a-entity>
+        <a-entity id="present_tree_model" rotation="0 90 0" position="0 0 30" gltf-model="#present_tree_model"></a-entity>
+        <a-entity id="present_tree_model" rotation="0 90 0" position="0 0 -30" gltf-model="#present_tree_model"></a-entity>
+        <a-entity id="present_tree_model" position="30 0 0" gltf-model="#present_tree_model"></a-entity>
+        <a-entity id="present_tree_model" position="-30 0 0" gltf-model="#present_tree_model"></a-entity>
+        
+
+        <!-- fire -->
+        <a-entity id="campfire-group">
+          <a-entity class="dirtground" geometry="primitive:cylinder; radius:2; height:0.01;" material="color:#271e11; roughness:1.0; opacity:0.85;" position="0 0 -4"></a-entity>
+          <a-entity id="rocks" gltf-model="#rocks_model" position="0 0 -4" scale="1.1 1.1 1.1"></a-entity>
+          <a-entity id="campfire" fire="particles: 500" position="0.0 -0.2 -4" scale="2 1.2 2"></a-entity>
+          <a-entity position="0.0 1.5 -4">
+            <a-entity id="ambient-light" light="type: point; color: #FFA200; intensity: 0.5; distance: 30.0; castShadow: true; shadowMapHeight: 1024; shadowMapWidth: 1024;"></a-entity>
+          </a-entity>
+        </a-entity>
+
+        <!-- camera and basket -->
+        <a-entity id="player" position="0 1.5 0" camera="active: true" look-controls wasd-controls>
+          <a-entity position="0 0 0" light="type: point; color: #f2dbd5; intensity: 0.05"></a-entity>
+          <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
+          <a-entity id="blink-plane" geometry="primitive: plane; width: 1; height: 1;" 
+            material="shader: flat; color: #000; opacity: 1;" 
+            position="0 0 -0.1">
+          </a-entity>
+          <!-- thanksgiving -->
+          <a-entity id="thanksgiving-UI" geometry="primitive: plane; width: 1; height: 1.4"
+            material="shader: flat; color: #334714; opacity: 0.7" position="-1 0 -1" visible="false">
+            <a-text id="thanksgiving-title" value="The Three Sisters" align="center" anchor="center" color="#FFF"
+              position="0 0.6 0" scale="0.25 0.25 0.25"></a-text>
+            <a-text id="thanksgiving-body"
+              value="We greet and thank the medicine plants of the earth. They have been instructed by the Creator to cure our diseases and sicknesses. Our people will always know their native names. They come in many forms and have many duties. Through the ones who have been vested with knowledge of the medicine plants, we give thanks. Now our minds are one. We give greetings and thanks to the plant life. Within the plants is the force of substance that sustains many life forms. From the time of the creation we have seen the various forms of plant life work many wonders. We hope that we will continue to see plant life for the generations to come. Now our minds are one. We give a greetings and thanks to the strawberry plants. We see them when the wind becomes warm again on the earth; the strawberries are indeed hanging there. And it is also true that we use them, that we drink the (straw)berry water. Now our minds are one."
+              align="left" anchor="center" color="#FFF" position="0 0.1 0" scale="0.17 0.17 0.17"></a-text>
+            <a-entity onclick="nextScene()" class="interactive" geometry="primitive: plane; width: 0.6; height: 0.2"
+              material="shader: flat; color: #DA8200; opacity: 1" position="0 -0.5 0.00001"
+              animation__mouseenter="property: material.color; type: color; to: #a86711; startEvents: mouseenter; dur: 300"
+              animation__mouseleave="property: material.color; type: color; to: #DA8200; startEvents: mouseleave; dur: 300">
+              <a-text id="thanksgiving-next-btn" value="Next" align="center" color="#FFF" position="0 0 0"
+                scale="0.25 0.25 0.25"></a-text>
+            </a-entity>
+          </a-entity>
+        </a-entity>
+
+        <a-entity id="plant-event" visible="false">
+          <a-entity position="4.73495 0 -9.52578" scale="0.25 0.25 0.25" gltf-model="assets/tobacco plant/tobacco plant.gltf"></a-entity>
+          <a-entity position="2.23611 0 -4.61644" scale="0.25 0.25 0.25" gltf-model="assets/sage plant/sage plant.gltf"></a-entity>
+          <a-entity position="-2.04659 0 -9.58976" scale="0.25 0.25 0.25" gltf-model="assets/wild strawberry plant/wild strawberry plant.gltf" rotation="0 -35.7 0"></a-entity>
+        </a-entity>
+
+        <!-- water event sub-scene -->
+        <a-entity position="409 0 0" id="waters-event" visible="true">
+          <a-entity rotation="0 90 0" gltf-model="#terrain_model"></a-entity>
+          <a-entity rotation="0 -90 0" gltf-model="#terrain_model"></a-entity>
+          <a-entity sound="src: #river_sound; autoplay:true; loop:true; volume: 10;"></a-entity>
+          <a-entity id="campfire-water-group" position="8.723 4.138 26.410">
+            <a-entity sound="src: #fire_sfx; autoplay:true; loop:true;"></a-entity>
+            <a-entity class="dirtground" geometry="primitive:cylinder; radius:2; height:0.01;"
+              material="color:#271e11; roughness:1.0; opacity:0.85;" position="0 0 0"></a-entity>
+            <a-entity id="rocks-water" gltf-model="#rocks_model" position="0 0 0" scale="1.1 1.1 1.1"></a-entity>
+            <a-entity id="campfire-water" fire="particles: 500" position="0.0 -0.2 0" scale="2 1.2 2"></a-entity>
+            <a-entity position="0.0 1.5 0">
+              <a-entity id="ambient-light"
+                light="type: point; color: #FFA200; intensity: 0.6; distance: 60.0; castShadow: true; shadowMapHeight: 1024; shadowMapWidth: 1024;">
+              </a-entity>
+            </a-entity>
+          </a-entity>
+          <a-entity geometry="primitive:sphere; radius: 70;"
+            material="src: #stars_img; side: back; transparency: true; shader: flat;"
+            animation__stars="property: material.opacity; from: 0.8; to: 0.9; dur: 50000; loop: true; dir: alternate">
+          </a-entity>
+          <a-sky radius="200" theta-length="110"
+            material="shader: gradientshader; topColor: #001157; bottomColor: #295A51" geometry=""></a-sky>
+          <a-entity position="0 98 0">
+            <a-plane position="0 0 0" rotation="-90 0 90" scale="1000 1000 1000"
+              material="src: #water; color: #2eaaaa; offset: 0 0; repeat: 600 600; side: double;"
+              displacement-map="#water-displacement" displacement-bias="-0.1" displacement-scale="0.0004"
+              displacement-texture-repeat="600 600" segments-height="400" segments-width="400" replace
+              animation="property: components.material.material.map.offset.x; from: 0; to: -1; loop: true; dur: 60000; easing: linear;"
+              animation__2="property: components.material.material.map.offset.y; from: 0; to: -1; loop: true; dur: 20000; easing: linear;">
+            </a-plane>
+          </a-entity>
+        </a-entity>
+
+        <a-entity id="bird-event" visible="false">
+          <a-entity gltf-model="assets/gltfs/passengerPigeon.gltf" rotation="0 -67 0" position="2.494 0.848 -2.651"></a-entity>
+        </a-entity>
+         
+        <a-entity id="animal-event" visible="false">
+          <a-entity id="deer1" position="-3.342 0 -8.129" rotation="0 -17.580 0" animation-mixer="clip:Armature|Eat; loop:repeat;" gltf-model="#deer_model"></a-entity>
+          <a-entity id="deer2" position="2.6 0 -9.129" rotation="0 70.5 0" animation-mixer="clip:Armature|Eat; timeScale:-1; loop:repeat;" gltf-model="#deer_model"></a-entity>
+        </a-entity>
+
+        <a-entity id="basket" gltf-model="#basket_model" rotation="0 -17.030 0" position="2.736 0 -2.765" scale="0.7 0.7 0.7"></a-entity>
+        
+
+        <!-- start thanksgiving btn -->
+        <a-entity id="thanksgiving-start-btn" onclick="startThanks()" class="interactive" scale="2 2 2" geometry="primitive: plane; width: 1; height: 0.3;"
+          material="shader: flat; color: #DA8200; opacity: 1; side: both;" position="0 1.3 -3" visible="true"
+          animation__mouseenter="property: material.color; type: color; to: #a86711; startEvents: mouseenter; dur: 300"
+          animation__mouseleave="property: material.color; type: color; to: #DA8200; startEvents: mouseleave; dur: 300">
+          <a-text value="Start Thanksgiving Address" align="center" color="#FFF" position="0 0 0" scale="0.25 0.25 0.25">
+          </a-text>
+        </a-entity>
+
+        <a-box body="type: static; shape: box" width=100 height=0.2 depth=100 visible="false"></a-box>
+        
+        </div>
+
+      </a-scene>
+    </body>
+
+</html>

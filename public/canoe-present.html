@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Canoe Journey</title>
+  <!-- js files and links -->
+  <meta name="description" content="IMD 3901 Term Project">
+  <script src="js/aframe.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
+  <script src="https://recast-api.donmccurdy.com/aframe-inspector-plugin-recast.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r134/examples/js/deprecated/Geometry.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+  <script src="js/replace.js"></script>
+  <script src="js/canoe-scenes.js"></script>
+  <script src="js/basket-popup.js"></script>
+  <script src="js/switch-panel-2.js"></script>
+  <script src="js/gltf-opacity.js"></script>
+
+  <!-- styling -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+  <a-scene id="scene" fog="type: linear; color: #d9f1da; far: 110; near: 0" inspector-plugin-recast loading-screen="enabled: false">
+    <a-assets>
+      <!-- models -->
+      <a-asset-item id="terrain_model" response-type="arraybuffer" src="assets/gltfs/canoeTerrainPresent.gltf"></a-asset-item>
+      <a-asset-item id="terrain_navmesh" src="assets/navmeshes/canoe-pre-contact.gltf"></a-asset-item>
+      <a-asset-item id="canoe_model" src="assets/gltfs/canoe.gltf"></a-asset-item>
+      <a-asset-item id="beaver_model" src="assets/gltfs/beaver.gltf"></a-asset-item>
+      <a-asset-item id="fish1_model" src="assets/gltfs/fish1.gltf"></a-asset-item>
+      <a-asset-item id="fish2_model" src="assets/gltfs/fish2.gltf"></a-asset-item>
+      <a-asset-item id="fish3_model" src="assets/gltfs/fish3.gltf"></a-asset-item>
+      <a-asset-item id="turtle_model" src="assets/gltfs/turtle.gltf"></a-asset-item>
+
+      <!-- sound -->
+      <audio id="women_dance" src="assets/sounds/1-05 Women's Dance.mp3" preload="auto" crossorigin="anonymous"></audio>
+      <audio id="river_ambience" src="assets/sounds/river_noise.mp3" preload="auto" crossorigin="anonymous"></audio>
+      <audio id="swoosh_sfx" src="assets/sounds/swoosh_sfx.wav" preload="auto" crossorigin="anonymous"></audio>
+
+      <!-- images -->
+      <img id="arrow_img" src="assets/arrow.png">
+      <img id="basket_img" src="assets/2D illustrations/collection basket.png">
+      <img id="lacrosse_img_2" src="assets/2D illustrations/artifact_postcontact lacrosse.png">
+      <img id="rattle_img" src="assets/2D illustrations/artifact_rattle.png">
+      <img id="tobacco_img" src="assets/2D illustrations/artifact_tobacco plant.png">
+      <img id="lacrosse_img_1" src="assets/2D illustrations/artifact_precontact lacrosse.png">
+      <img id="waterdrum_img" src="assets/2D illustrations/artifact_water drum.png">
+      <img id="strawberry_img" src="assets/2D illustrations/artifact_wild strawberry.png">
+      <img id="lacrosse_img_3" src="assets/2D illustrations/artifact_present day lacrosse.png">
+      <img id="willow_img" src="assets/2D illustrations/artifact_red willow.png">
+      <img id="sage_img" src="assets/2D illustrations/artifact_sage.png">
+      <img id="water" src="assets/water/water.png"/>
+      <img id="water-displacement" src="assets/water/displacement.jpg"/>
+    </a-assets>
+
+    <!-- player -->
+    <a-entity id="player" position="10.191 1.775 0" movement-controls="speed: 0.7; constrainToNavMesh: true;">
+      <a-entity id="camera" camera look-controls position="0 1.6 0" sound__river="src: #river_ambience; autoplay: true; loop:true; volume: 1;" sound__swoosh="src: #swoosh_sfx">
+        <!-- basket -->
+        <a-image id="basket" open-popup class="button interactive" position="0 -0.7 -1" scale="0.25 0.25 0.25" src="#basket_img" transparent="true"></a-image>
+        <a-text id="b-text" position="0 -0.715 -1" value="Open Basket" align="center" color="#FFF" visible="true" scale="0.12 0.12 0.12"></a-text>
+        <!-- popup -->
+        <a-entity id="popup" geometry="primitive: plane; width: 1.7; height: 1" material="shader: flat; color: #41827c; opacity: 1" position="0 0 -1" visible="false" >
+          <a-text id="title" value="Present Artifacts" align="center" color="#FFF" position="0 0.4 0" visible="true" scale="0.25 0.25 0.25"></a-text>
+          <a-text id="message" wrap-count="70" value="Look for these items once you arrive on land!" align="center" color="#FFF" position="0 0.32 0" visible="true" scale="0.3 0.3 0.3"></a-text>
+          <a-entity id="art1" geometry="primitive: plane; width: 0.5; height: 0.5" position="-0.23 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #lacrosse_img_3; opacity: 0.2">
+            <a-text id="art1-text" value="Lacrosse Stick:" align="center" color="#FFF" position="0 -0.4 0" visible="false" scale="0.5 0.5 0.5"></a-text>
+            <a-text id="art1-text-2" value="Kà:nhien" font="assets/font/Mohawk-msdf.json" negate="false" align="center" color="#FFF" position="0 -0.5 0" visible="false" scale="0.5 0.5 0.5"></a-text>
+          </a-entity>
+          <a-entity id="art2" geometry="primitive: plane; width: 0.5; height: 0.5" position="0 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #sage_img; opacity: 0.2">
+            <a-text id="art2-text" value="" align="center" color="#FFF" position="0 -0.4 0" visible="true" scale="0.5 0.5 0.5"></a-text>
+            <a-text id="art2-text-2" value="" font="assets/font/Mohawk-msdf.json" negate="false" align="center" color="#FFF" position="0 -0.5 0" visible="true" scale="0.5 0.5 0.5"></a-text>
+          </a-entity>
+          <a-entity id="art3" geometry="primitive: plane; width: 0.5; height: 0.5" position="0.23 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #willow_img; opacity: 0.2">
+            <a-text id="art3-text" value="" align="center" color="#FFF" position="0 -0.4 0" visible="true" scale="0.5 0.5 0.5"></a-text>
+            <a-text id="art3-text-2" value="" font="assets/font/Mohawk-msdf.json" negate="false" align="center" color="#FFF" position="0 -0.5 0" visible="true" scale="0.5 0.5 0.5"></a-text>
+          </a-entity>
+          <a-entity id="back-arrow-post" switch-panel-2 geometry="primitive: plane; width: 0.05; height: 0.05" class="button interactive" position="-0.75 -0.4 0" material="src: #arrow_img; shader: flat; transparent: true" visible="true"></a-entity>
+          <a-entity id="back-arrow-pre" switch-panel-2 geometry="primitive: plane; width: 0.05; height: 0.05" class="button interactive" position="-0.75 -0.4 0" material="src: #arrow_img; shader: flat; transparent: true" visible="false"></a-entity>
+          <a-entity id="front-arrow-post" switch-panel-2 geometry="primitive: plane; width: 0.05; height: 0.05" class="button interactive" position="0.75 -0.4 0" rotation="0 0 180" material="src: #arrow_img; shader: flat; transparent: true" visible="false"></a-entity>
+          <a-entity id="front-arrow-present" switch-panel-2 geometry="primitive: plane; width: 0.05; height: 0.05" class="button interactive" position="0.75 -0.4 0" rotation="0 0 180" material="src: #arrow_img; shader: flat; transparent: true" visible="false"></a-entity>
+          <a-text id="arrow-text-1" wrap-count="70" value="See Post-Contact Artifacts" align="center" color="#FFF" position="-0.49 -0.4 0" visible="true" scale="0.3 0.3 0.3" visible="true"></a-text>
+          <a-text id="arrow-text-2" wrap-count="70" value="See Present Day Artifacts" align="center" color="#FFF" position="0.49 -0.4 0" visible="false" scale="0.3 0.3 0.3" visible="false"></a-text>
+        </a-entity>
+        <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!-- canoe -->
+    <a-entity id="canoe" position="0 -1 -18" rotation="0 90 0" class="interactive" onclick="getInCanoe('women_dance', '/land-present.html');" gltf-model="#canoe_model" ></a-entity>
+   
+    <!-- terrain -->
+    <a-entity id="terrain" position="0 0 -30">
+      <a-entity gltf-model="#terrain_navmesh" nav-mesh position="0 -0.1 30" visible="false"></a-entity>
+      <a-entity position="0 -2.5 0" rotation="0 90 0" gltf-model="#terrain_model"></a-entity>
+      <a-entity position="0 -2.5 0" rotation="0 270 0" gltf-model="#terrain_model"></a-entity>
+      <!--animals-->
+      <a-entity id="fish1" gltf-model="#fish1_model" position="-3.5 -1.5 7.5" rotation="0 -60 0" scale="0.75 0.75 0.75"
+      animation__opacity="property: model-opacity.opacity;from: 0.8; to: 0.2; dur: 3000; easing: easeInOutSine; loop: true; dir: alternate;" 
+      animation__rotate="property: rotation; to: 0 -120 0; dur: 1000; easing: easeInOutSine; loop: true; dir: alternate;">
+      </a-entity>
+      <a-entity id="fish2" gltf-model="#fish2_model" position="-1 -1.5 8.2" rotation="0 -60 0" scale="0.5 0.5 0.5"
+      animation__opacity="property: model-opacity.opacity;from: 0.8; to: 0.2; dur: 3000; easing: easeInOutSine; loop: true; dir: alternate;" 
+      animation__rotate="property: rotation; to: 0 -120 0; dur: 1000; easing: easeInOutSine; loop: true; dir: alternate;" >
+      </a-entity>
+      <a-entity id="fish3" gltf-model="#fish3_model" visible="false" position="-2.5 -1.5 6.8" rotation="0 -60 0" scale="0.5 0.5 0.5"
+      animation__opacity="property: model-opacity.opacity;from: 0.8; to: 0.2; dur: 3000; easing: easeInOutSine; loop: true; dir: alternate;" 
+      animation__rotate="property: rotation; to: 0 -120 0; dur: 1000; easing: easeInOutSine; loop: true; dir: alternate;" >
+      </a-entity>
+      <a-entity gltf-model="#turtle_model" position="-24.3 0.24 21.7" rotation="-32.6 26.8 -1.8" scale="0.55 0.55 0.55"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="-45.6 0.5 21.3" rotation="150 19.4 -169" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="48.5 0.2 21" rotation="-36.5 0 0" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="-49.5 1 -22.5" rotation="19.6 0 0" scale="0.7 0.7 0.7"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="25.5 1.57 -24.1" rotation="9.8 -24.7 -13.9" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="31 -1 19" rotation="-20 26 0" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="58 1.2 24.6" rotation="171 -36 175" scale="0.88 0.88 0.88"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="-52.9 -1.42 19.22" rotation="-22 -19 0" scale="0.5 0.5 0.5"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="55.6 1.9 -28.5" rotation="-0.7 144.5 2" scale="0.8 0.8 0.8"></a-entity>
+      <!-- water -->
+      <a-entity position="0 98 0">
+        <a-entity class="ambient-sounds" sound="src: #river_sound; autoplay: true; loop: true;"></a-entity>
+        <a-plane position="0 0.3 0" rotation="-90 0 90" scale="1000 1000 1000" 
+          material="src: #water; color: #2eaaaa; offset: 0 0; repeat: 600 600; side: double; transparent: true; opacity: 0.7;"
+          displacement-map="#water-displacement"
+          displacement-bias="-0.1"
+          displacement-scale="0.0009"
+          displacement-texture-repeat="600 600"
+          segments-height="400"
+          segments-width="400"
+          replace
+          animation="property: components.material.material.map.offset.x; from: 0; to: 1; loop: true; dur: 20000; easing: linear;"
+          animation__2="property: components.material.material.map.offset.y; from: 0; to: 1; loop: true; dur: 50000; easing: linear;"
+          animation="property: material.offset.x; from: 0; to: 1; loop: true; dur: 50000; easing: linear;"
+        >
+        </a-plane>
+        <a-plane position="0 0 0" rotation="-90 0 90" scale="1000 1000 1000" 
+          material="src: #water; color: #2eaaaa; offset: 0 0; repeat: 600 600; side: double;"
+          displacement-map="#water-displacement"
+          displacement-bias="-0.1"
+          displacement-scale="0.0004"
+          displacement-texture-repeat="600 600"
+          segments-height="400"
+          segments-width="400"
+          replace
+          animation="property: components.material.material.map.offset.x; from: 0; to: -1; loop: true; dur: 60000; easing: linear;"
+          animation__2="property: components.material.material.map.offset.y; from: 0; to: -1; loop: true; dur: 20000; easing: linear;"
+          >
+        </a-plane>
+      </a-entity>
+    </a-entity>
+
+    <!-- remaking the sky from environment component -->
+    <a-sky radius="200" theta-length="110" class="environment" material="shader: gradientshader; topColor: #0ba298; bottomColor: #D4F7D5" visible="" geometry=""></a-sky>
+  </a-scene>
+</body>
+
+</html>

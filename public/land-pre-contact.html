@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+      <title>Canoe Journey</title>
+      <!-- js files and links -->
+      <meta name="description" content="IMD 3901 Term Project">
+      <script src="js/aframe.min.js"></script>
+      <script src="https://unpkg.com/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
+      <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.js"></script>
+      <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+      <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script>
+      <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script> 
+      <script src="js/artifact-selection.js"></script>
+      <script src="js/basket-popup.js"></script>
+      <script src="js/scene-transition-1.js"></script>
+      <script src="js/audio-effect.js"></script>
+      <script src="js/aframe-particle-component.js"></script>
+      <script src="js/land-experience-pre.js"></script>
+      <script src="js/gltf-opacity.js"></script>
+      
+      <!-- styling -->
+      <link rel="stylesheet" href="css/land.css">
+
+    </head>
+
+    <body>
+      <!-- welcome popup -->
+      <div id="user-gesture-overlay">
+        <div id="continue-container" style="display: flex;">
+          <div class="continue-parent">
+            <div class="continue-child">
+              <img id="tree-icon" src="assets/2D illustrations/welcome_precontact tree.png">
+            </div>
+            <div class="continue child continue-text">Welcome to the Pre-Contact era!</div>
+            <div class="continue-child">
+              <button id="user-gesture-button" onClick="startExperience();">Explore</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+      <a-scene start-experience loading-screen="enabled: false">
+        
+        <a-assets>
+          <!-- audio -->
+          <audio id="forest_ambience" src="assets/sounds/Forest Ambience.mp3" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="swoosh_sfx" src="assets/sounds/swoosh_sfx.wav" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="wild_strawberry" src="assets/sounds/Wild Strawberry.mp3" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="lacrosse_stick" src="assets/sounds/Lacrosse stick.mp3" preload="auto" crossorigin="anonymous"></audio>
+          <audio id="water_drum" src="assets/sounds/Water drum.mp3" preload="auto" crossorigin="anonymous"></audio>
+
+          <!-- images -->
+          <img id="stars_img" src="assets/sky_stars.png">
+          <img id="basket_img" src="assets/2D illustrations/collection basket.png">
+          <img id="speaker_img" src="assets/speaker_icon.png">
+          <img id="lacrosse_img" src="assets/2D illustrations/artifact_precontact lacrosse.png">
+          <img id="waterdrum_img" src="assets/2D illustrations/artifact_water drum.png">
+          <img id="strawberry_img" src="assets/2D illustrations/artifact_wild strawberry.png">
+          <img id="star" src="https://cdn.rawgit.com/IdeaSpaceVR/aframe-particle-system-component/master/dist/images/star2.png" crossorigin="anonymous">
+
+          <!-- 3D models -->
+          <a-asset-item id="tree_model" response-type="arraybuffer" src="assets/tree env/precontact trees.gltf"></a-asset-item>
+          <a-asset-item id="strawberry_model" response-type="arraybuffer" src="assets/wild strawberry plant/wild strawberry plant.gltf"></a-asset-item>
+          <a-asset-item id="drum_model" response-type="arraybuffer" src="assets/gltfs/water drum.gltf"></a-asset-item>
+          <a-asset-item id="lacrosse_model" response-type="arraybuffer" src="assets/gltfs/preLacrosseStick.gltf"></a-asset-item>
+          <a-asset-item id="deer_model" response-type="arraybuffer" src="assets/low_poly_deer/scene.gltf"></a-asset-item>
+          <a-asset-item id="black_bear_model" response-type="arraybuffer" src="assets/low-poly_black_bear/scene.gltf"></a-asset-item>
+          <a-asset-item id="rabbit_model" response-type="arraybuffer" src="assets/low_poly_rabbit/scene.gltf"></a-asset-item>
+          <a-asset-item id="clouds_model" response-type="arraybuffer" src="assets/gltfs/clouds.gltf"></a-asset-item>
+          
+          <!-- geometry presets -->
+          <a-mixin id="createBlock" class="block" hoverable grabbable stretchable draggable droppable body="shape: box" material="color: red" shadow
+          animation__fadein="property:material.opacity; to: 0; dur: 200;"></a-mixin>
+        
+        </a-assets>
+
+        <!-- sound setup -->
+        <a-entity sound="src: #forest_ambience; autoplay:true; loop:true; volume: 1;"></a-entity>
+
+        <!-- camera and basket -->
+        <a-entity id="starting-position" position="0 3 6" movement-controls="speed: 0.7;">
+          <a-entity id="cam" sound="src: #swoosh_sfx" camera look-controls wasd-controls>
+            <!-- basket -->
+            <a-image id="basket" visible="false" open-popup class="button interactive" position="0 -0.7 -1" scale="0.25 0.25 0.25" src="#basket_img"></a-image>
+            <a-text id="b-text" visible="false" position="0 -0.715 -1" value="Open Basket" align="center" color="#FFF" visible="true" scale="0.12 0.12 0.12"></a-text>
+            <!-- popup -->
+            <a-entity id="popup" geometry="primitive: plane; width: 1.7; height: 1" material="shader: flat; color: #41827c; opacity: 1" position="0 0 -1" visible="false" >
+              <a-text id="none-text" value="Nothing in your basket." align="center" color="#FFF" position="0 0.4 0" visible="true" scale="0.25 0.25 0.25"></a-text>
+              <a-entity id="speaker-1" sound="src: #lacrosse_stick" activate-audio="target: #artifact3" geometry="primitive: plane; width: 0.03; height: 0.03" class="button interactive" position="-0.23 0.1 0.5" material="src: #speaker_img; shader: flat; transparent: true"></a-entity>
+              <a-entity id="art1" geometry="primitive: plane; width: 0.5; height: 0.5" position="-0.23 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #lacrosse_img; opacity: 0.2">
+                <a-text id="art1-text" value="Lacrosse Stick:" align="center" color="#FFF" position="0 -0.4 0" visible="false" scale="0.5 0.5 0.5"></a-text>
+                <a-text id="art1-text-2" value="Kà:nhien" font="assets/font/Mohawk-msdf.json" negate="false" align="center" color="#FFF" position="0 -0.5 0" visible="false" scale="0.5 0.5 0.5"></a-text>
+              </a-entity>
+              <a-entity id="speaker-2" sound="src: #wild_strawberry" activate-audio="target: #artifact1" geometry="primitive: plane; width: 0.03; height: 0.03" class="button interactive" position="0 0.1 0.5" material="src: #speaker_img; shader: flat; transparent: true"></a-entity>
+              <a-entity id="art2" geometry="primitive: plane; width: 0.5; height: 0.5" position="0 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #strawberry_img; opacity: 0.2">
+                <a-text id="art2-text" value="Wild Strawberry:" align="center" color="#FFF" position="0 -0.4 0" visible="false" scale="0.5 0.5 0.5"></a-text>
+                <a-text id="art2-text-2" value="Kenniohontéshakó:wa" font="assets/font/Mohawk-msdf.json" negate="false" align="center" color="#FFF" position="0 -0.5 0" visible="false" scale="0.5 0.5 0.5"></a-text>
+              </a-entity>
+              <a-entity id="speaker-3" sound="src: #water_drum" activate-audio="target: #artifact2" geometry="primitive: plane; width: 0.03; height: 0.03" class="button interactive" position="0.23 0.1 0.5" material="src: #speaker_img; shader: flat; transparent: true"></a-entity>
+              <a-entity id="art3" geometry="primitive: plane; width: 0.5; height: 0.5" position="0.23 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #waterdrum_img; opacity: 0.2">
+                <a-text id="art3-text" value="Water Drum:" align="center" color="#FFF" position="0 -0.4 0" visible="false" scale="0.5 0.5 0.5"></a-text>
+                <a-text id="art3-text-2" value="Kana'tsió:wi" font="assets/font/Mohawk-msdf.json" negate="false" align="center" color="#FFF" position="0 -0.5 0" visible="false" scale="0.5 0.5 0.5"></a-text>
+              </a-entity>
+              <a-text id="hint-text" wrap-count="70" value="Need a hint? Click the speakers to know what the artifacts sound like!" align="center" color="#FFF" position="0 -0.4 0" visible="true" scale="0.3 0.3 0.3"></a-text>
+            </a-entity>
+            <!-- exiting scene transition -->
+            <a-entity id="fade" position="0 0 -0.1" geometry="primitive: circle; radius: 5" material="color: #000; opacity: 0; shader: flat" visible="false"></a-entity>
+            <a-text id="timeText" value="Going back to the canoe" align="center" color="#FFF" visible="false" position="0 0 -0.1" scale="0.03 0.03 0.03"></a-text>
+          </a-entity> 
+          <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
+        </a-entity>
+       
+        <!-- environment -->
+        <a-entity id="env" environment="preset: forest; dressing: none; ground: hills; groundYScale:150; groundColor: #405200; groundTexture: none; lighting:none; playArea: 1.6; fog: 0.99;" 
+                  animation__sky1="property: environment.skyColor; from: #22BDB2; to: #01081c; dur: 60000; loop: true; dir: alternate; easing:easeInOutQuad" 
+                  animation__sky2="property: environment.horizonColor; from: #D4F7D5; to: #012133; dur: 60000; loop: true; dir: alternate; easing:easeInOutQuad">
+
+                  <a-entity class="environment" position="0 50 0" light="type: hemisphere; color: #FFFFFF; intensity: 0.7; groundColor: rgba(248,255,199,1);"
+                  animation__light="property: light.color; to: rgba(0,0,0,1); dur: 60000; dir: alternate; loop: true;"
+                  ></a-entity>
+
+                  <a-entity class="environment" position="0 50 0" light="type: directional; color: #FFFFFF; intensity: 0.7; groundColor: rgba(66,99,2,1);"
+                  animation__light2="property: light.intensity; from: 0.6; to: 0.2; dur: 60000; dir: alternate; loop: true;"
+                  ></a-entity>
+        </a-entity>
+        <a-entity geometry="primitive:sphere; radius: 100;" material="src: #stars_img; side: back; transparency: true; shader: flat;" animation__stars="property: material.opacity; from: 0; to: 0.3; dur: 60000; loop: true; dir: alternate"></a-entity>
+               
+           
+        <!-- light -->
+        <a-entity light="type:point; intensity:0.45; castShadow:true; color:rgb(255,251,143); groundColor:rgb(238,216,7);shadowBias:-0.001; angle:360; penumbra:0.3;" position="0 20 0"
+        animation__light="property: light.intensity; to: 0.1; dur: 60000; dir: alternate; loop: true;"></a-entity>
+        
+        <!-- trees -->
+        <a-entity id="tree_model" position="-3.5 0 -37.5" scale="0.8 0.8 0.8" rotate="0 -30 0" gltf-model="#tree_model" shadow="cast: true; receive: true"></a-entity>
+        <a-entity id="tree_model" position="-43 0 21" scale="0.9 0.9 0.9" gltf-model="#tree_model" shadow="cast: true; receive: true"></a-entity>
+        <a-entity id="tree_model" position="36.9 0 20.2" scale="0.8 0.8 0.8" rotate="0 46 0" gltf-model="#tree_model" shadow="cast: true; receive: true"></a-entity>
+
+        <!-- clouds -->
+        <a-entity id="clouds_model" 
+        animation__opacity="property: model-opacity.opacity;from: 0.1; to: 0.05; dur: 60000; easing: easeInOutSine; loop: true; dir: alternate;" 
+        animation__rotate="property: rotation;from: 0 0 0; to: 0 360 0; dur: 120000; easing: easeInOutSine; loop: true;" 
+        position="0 25 0" 
+        gltf-model="#clouds_model" 
+        shadow="cast: true; receive: true"></a-entity>
+        
+        <!-- shifting everything in the environment -->
+        <a-entity position="-45 0 -20">
+          
+          <!-- animals -->
+          <a-entity id="deer1" position="41 0 10" scale="1.5 1.5 1.5" animation-mixer="clip:Armature|Eat; loop:repeat;" gltf-model="#deer_model"></a-entity>
+          <a-entity id="deer2" position="40 0 12.5" scale="1.5 1.5 1.5" rotation="0 30 0" animation-mixer="clip:Armature|Eat; timeScale:-1; loop:repeat;" gltf-model="#deer_model"></a-entity>
+          <a-entity id="deer3" position="38 0.2 30" scale="1.5 1.5 1.5" rotation="0 135 0" animation-mixer="clip:Armature|Eat; loop:pingpong; timeScale: 0.8" gltf-model="#deer_model"></a-entity>
+          <a-entity id="deer4" position="55 0.2 7" scale="1.6 1.6 1.6" rotation="0 50 0" animation-mixer="clip:Armature|Eat; loop:pingpong; timeScale: 0.8" gltf-model="#deer_model"></a-entity>
+          <a-entity id="bear1" position="33 0.6 13" scale="1.5 1.5 1.5" rotation="0 330 0" gltf-model="#black_bear_model"></a-entity>
+          <a-entity id="bear2" position="53 0.5 25" scale="2 2 2" rotation="0 110 0" gltf-model="#black_bear_model"></a-entity>
+          <a-entity id="rabbit1" position="41 0.2 1" rotation="0 90 0" scale="0.35 0.35 0.35" animation-mixer="clip:Armature.001|Idle; loop:repeat;" gltf-model="#rabbit_model"></a-entity>
+          <a-entity id="rabbit2" position="55 0.2 7" rotation="0 315 0" scale="0.25 0.25 0.25" animation-mixer="clip:Armature.001|Idle; loop:repeat;" gltf-model="#rabbit_model"></a-entity>
+
+          <!-- strawberry plant -->
+          <a-entity id="artifact1" sound="src: #wild_strawberry" class="button interactive" position="52 0 15" scale="0.25 0.25 0.25" gltf-model="#strawberry_model" 
+                    selection="artifact: #artifact1; color: red; xpos: 7; ypos: 0.7; zpos: -5; popupImg: #art2; popupText1: #art2-text; popupText2: #art2-text-2; speaker: #speaker-2;" 
+                    score-count
+                    event-set__enter="_event: mouseenter; _target: #infoText1; visible: true"
+                    event-set__leave="_event: mouseleave; _target: #infoText1; visible: false">
+            <a-text id="infoText1" value="Wild Strawberry: Kenniohontéshakó:wa" font="assets/font/Mohawk-msdf.json" antialias="true" negate="false" align="center" color="#FFF" look-at="#cam" visible="false" position="0 7 0" scale="1.5 1.5 1.5"
+                    geometry="primitive: plane; width: 4.5" material="color: #333; opacity:0.6">
+            </a-text>
+          </a-entity>
+
+          <!-- water drum -->
+          <a-entity id="artifact2" sound="src: #water_drum" class="button interactive" rotation="0 90 0" position="28 0 14" scale="0.75 0.75 0.75" gltf-model="#drum_model"
+                    selection="artifact: #artifact2; color: #db944d; xpos: -17; ypos: 1; zpos: -6; popupImg: #art3; popupText1: #art3-text; popupText2: #art3-text-2; speaker: #speaker-3" 
+                    score-count
+                    event-set__enter="_event: mouseenter; _target: #infoText2; visible: true"
+                    event-set__leave="_event: mouseleave; _target: #infoText2; visible: false">
+            <a-text id="infoText2" value="Water Drum: Kana'tsió:wi" font="assets/font/Mohawk-msdf.json" align="center" negate="false" color="#FFF" visible="false" look-at="#cam" position="0 1.5 0" scale="0.75 0.75 0.75"
+                    geometry="primitive: plane; width: 3.5" material="color: #333; opacity:0.6">
+            </a-text>
+          </a-entity>
+
+          <!-- lacrosse stick -->
+          <a-entity id="artifact3" sound="src: #lacrosse_stick" class="button interactive" rotation="0 180 0" position="52 0 43" scale="0.2 0.2 0.2" gltf-model="#lacrosse_model" 
+                    selection="artifact: #artifact3; color: #933e14; xpos: 7; ypos: 1; zpos: 23; popupImg: #art1; popupText1: #art1-text; popupText2: #art1-text-2; speaker: #speaker-1"
+                    score-count
+                    event-set__enter="_event: mouseenter; _target: #infoText3; visible: true"
+                    event-set__leave="_event: mouseleave; _target: #infoText3; visible: false">
+            <a-text id="infoText3" value="Lacrosse Stick: Kà:nhien" font="assets/font/Mohawk-msdf.json" align="center" negate="false" color="#FFF" visible="false" position="0 13 0" look-at="#cam" scale="2 2 2"
+                    geometry="primitive: plane; width: 3" material="color: #333; opacity:0.6">
+            </a-text>
+          </a-entity>
+
+        </a-entity>
+
+        <!-- physics collider -->
+        <a-box body="type: static; shape: box" width=100 height=0.2 depth=100 visible="false"></a-box>
+
+      </a-scene>
+    </body>
+
+</html>

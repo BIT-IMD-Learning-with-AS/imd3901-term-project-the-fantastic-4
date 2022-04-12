@@ -1,54 +1,179 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Hello, IMD3901 Term Project!</title>
-        <meta name="description" content="HHello, IMD3901 Term Project!">
-        <script src="js/aframe.min.js"></script>
 
-        <!-- need a user gesture to allow sound on some browsers i.e. iOS -->
-        <link rel="stylesheet" href="css/user-gesture.css">
-        <script>
-            AFRAME.registerComponent('start-experience', {
-                init: function () {
-                    //we can't play sound on some browsers until we have some user interaction
-                    //this means we should only start playing ambient music after this button is clicked
-                    console.log('scene loaded');
-                    document.querySelector('#loading-animation').style.display = 'none';
-                    document.querySelector('#user-gesture-button').style.display = 'block';
-                }
-            });
+<head>
+  <title>Canoe Journey</title>
+  <meta name="description" content="IMD 3901 Term Project">
+  <!-- js files and links -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+  <script src="js/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
+  <script src="https://recast-api.donmccurdy.com/aframe-inspector-plugin-recast.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r134/examples/js/deprecated/Geometry.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+  <script src="js/replace.js"></script>
+  <script src="js/canoe-start.js"></script>
+  <script src="js/basket-popup.js"></script>
+  <script src="js/gltf-opacity.js"></script>
+  <script src="js/start-journey.js"></script>
+  <script>
+    //open popup for controls
+    function myFunction() {
+      var popup = document.getElementById("myPopup");
+      popup.classList.toggle("show");
+    }
+  </script>
+  
+  <!-- styling -->
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
 
-            //function called from user-gesture click
-            const startExperience = function () {
-                //hide user-gesture overlay
-                document.querySelector('#user-gesture-overlay').style.display = 'none';
-
-                //start all ambient music
-                const ambientSounds = document.querySelectorAll('.ambient-music');
-                ambientSounds.forEach(function (soundEntity) {
-                    soundEntity.components.sound.playSound();
-                });
-            }
-        </script>
-    </head>
-    <body>
-        <!-- by having a 2D "user gesture" we can allow sounds to play and the like. We will make it an overlay so nothing can be clicked before the user gesture ... -->
-        <!-- https://developers.google.com/web/updates/2017/09/autoplay-policy-changes (fun memes on webpage;) -->
-        <div id="user-gesture-overlay">
-            <div class="center">
-                <button id="user-gesture-button" onclick="startExperience();">enter experience</button>
-                <!-- loading gif from: https://www.behance.net/gallery/31234507/Open-source-Loading-GIF-Icons-Vol-1 -->
-                <img id="loading-animation"
-                    src="https://cdn.glitch.com/4d85200f-900f-4f4a-b950-82c4af80c1fb%2Floader.gif?v=1611262527887">
-            </div>
+<body>
+ <!-- title screen -->
+  <div id="user-gesture-overlay">
+    <div id="continue-container" style="display: flex;">
+      <div class="continue-parent">
+        <div class="continue-child">
+          <img id="logo" src="assets/title_img.png" alt="Canoe Journeys">
         </div>
+        <button id="user-gesture-button" style="display: block;"class="button-19" onClick="startExperience();" role="button">start</button>
+        <div class="round"></div>
+          <div class="continue-child">
+            <button type="button" class="btn btn-primary btn-circle btn-sm popup" onclick="myFunction()">?
+              <span class="popuptext" id="myPopup">Controls:<br>WASD keys to move<br>Hold LMB to rotate<br>Click LMB to collect</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <a-scene start-experience id="scene" fog="type: linear; color: #d9f1da; far: 80; near: 0" inspector-plugin-recast loading-screen="enabled: false">
+    <a-assets>
+      <!-- models -->
+      <a-asset-item id="terrain_model" response-type="arraybuffer" src="assets/gltfs/canoeTerrain.gltf"></a-asset-item>
+      <a-asset-item id="terrain_navmesh" src="assets/navmeshes/canoe-pre-contact.gltf"></a-asset-item>
+      <a-asset-item id="canoe_model" src="assets/gltfs/canoe.gltf"></a-asset-item>
+      <a-asset-item id="beaver_model" src="assets/gltfs/beaver.gltf"></a-asset-item>
+      <a-asset-item id="fish1_model" src="assets/gltfs/fish1.gltf"></a-asset-item>
+      <a-asset-item id="fish2_model" src="assets/gltfs/fish2.gltf"></a-asset-item>
+      <a-asset-item id="fish3_model" src="assets/gltfs/fish3.gltf"></a-asset-item>
+      <a-asset-item id="turtle_model" src="assets/gltfs/turtle.gltf"></a-asset-item>
+      
+      <!-- sounds -->
+      <audio id="pigeon_dance" src="assets/sounds/2-02 Pigeon Dance.mp3" preload="auto" crossorigin="anonymous"></audio>
+      <audio id="river_ambience" src="assets/sounds/river_noise.mp3" preload="auto" crossorigin="anonymous"></audio>
+      <audio id="swoosh_sfx" src="assets/sounds/swoosh_sfx.wav" preload="auto" crossorigin="anonymous"></audio>
+      
+      <!-- images -->
+      <img id="basket_img" src="assets/2D illustrations/collection basket.png">
+      <img id="lacrosse_img" src="assets/2D illustrations/artifact_precontact lacrosse.png">
+      <img id="waterdrum_img" src="assets/2D illustrations/artifact_water drum.png">
+      <img id="strawberry_img" src="assets/2D illustrations/artifact_wild strawberry.png">
+      <img id="water" src="assets/water/water.png"/>
+      <img id="water-displacement" src="assets/water/displacement.jpg"/>
+    </a-assets>
 
-        <a-scene start-experience>
-            <a-entity id="box" position="0 2 -3" geometry="primitive:box; width:3.0; height:4.0; depth:1.0"
-                material="color:#FF0000;"></a-entity>
+    <!-- player -->
+    <a-entity id="player" position="40 20 30" rotation="5 20 0" movement-controls="speed: 0; constrainToNavMesh: true;">
+      <a-entity id="camera" camera look-controls="enabled: false" position="0 1.6 0" sound__river="src: #river_ambience; autoplay: true; loop:true; volume: 1;" sound__swoosh="src: #swoosh_sfx">
+        <!-- intro animation -->
+        <a-text id="sentence-1" value="Welcome to the beginning of your canoe journey." opacity="0" position="0 -2.5 -7" wrap-count="40" align="center" scale="1.5 1.5 1.5"></a-text>
+        <a-text id="sentence-2" value="You will be travelling through three time periods from the past to the present." opacity="0" position="0 -2.5 -7" wrap-count="40" align="center" scale="1.5 1.5 1.5"></a-text>
+        <a-text id="sentence-3" value="Your goal is to explore the environment and collect the artifacts listed in your basket." opacity="0" position="0 -2.5 -7" wrap-count="40" align="center" scale="1.5 1.5 1.5"></a-text>
+        <a-text id="sentence-4" value="Once all the items have been collected, we will see you again!" opacity="0" position="0 -2.5 -7" wrap-count="40" align="center" scale="1.5 1.5 1.5"></a-text>
+        <!-- basket -->
+        <a-image id="basket" visible="false" open-popup class="button interactive" position="0 -0.7 -1" scale="0.25 0.25 0.25" src="#basket_img" transparent="true"></a-image>
+        <a-text id="b-text" visible="false" position="0 -0.715 -1" value="Open Basket" align="center" color="#FFF" visible="true" scale="0.12 0.12 0.12"></a-text>
+        <!-- popup -->
+        <a-entity id="popup" geometry="primitive: plane; width: 1.7; height: 1" material="shader: flat; color: #41827c; opacity: 1" position="0 0 -1" visible="false" >
+          <a-text id="title" value="Pre-Contact Artifacts" align="center" color="#FFF" position="0 0.4 0" visible="true" scale="0.25 0.25 0.25"></a-text>
+          <a-text id="message" wrap-count="70" value="Look for these items once you arrive on land!" align="center" color="#FFF" position="0 0.32 0" visible="true" scale="0.3 0.3 0.3"></a-text>
+          <a-entity id="art1" geometry="primitive: plane; width: 0.5; height: 0.5" position="-0.23 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #lacrosse_img; opacity: 0.2">
+          </a-entity>
+          <a-entity id="art2" geometry="primitive: plane; width: 0.5; height: 0.5" position="0 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #strawberry_img; opacity: 0.2">
+          </a-entity>
+          <a-entity id="art3" geometry="primitive: plane; width: 0.5; height: 0.5" position="0.23 0 0.5" scale="0.2 0.2 0.2" material="shader: flat; src: #waterdrum_img; opacity: 0.2">
+          </a-entity>
+          <a-text id="hint-text" wrap-count="70" value="No previously collected artifacts to show" align="center" color="#FFF" position="0 -0.4 0" visible="true" scale="0.3 0.3 0.3"></a-text>
+        </a-entity>
+        <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
+      </a-entity>
+    </a-entity>
 
-            <a-entity id="plane" position="0 0 0" rotation="-90 0 0" scale="10 10 10"
-                geometry="primitive:plane; width:1.0; height:1.0;" material="color:rgb(0, 255, 0);"></a-entity>
-        </a-scene>
-    </body>
+    <!-- canoe -->
+    <a-entity id="canoe" position="0 -1.5 -18" rotation="0 90 0" class="interactive" onclick="getInCanoe('pigeon_dance', '/land-pre-contact.html');" gltf-model="#canoe_model" ></a-entity>
+
+    <!-- terrain -->
+    <a-entity id="terrain" position="0 0 -30">
+      <a-entity gltf-model="#terrain_navmesh" nav-mesh position="0 -0.1 30" visible="false"></a-entity>
+      <a-entity position="0 -2.5 0" rotation="0 90 0" gltf-model="#terrain_model"></a-entity>
+      <a-entity position="0 -2.5 0" rotation="0 270 0" gltf-model="#terrain_model"></a-entity>
+      <!--animals-->
+      <a-entity id="fish1" gltf-model="#fish1_model" position="-3.5 -1.5 7.5" rotation="0 -60 0" scale="0.75 0.75 0.75"
+      animation__opacity="property: model-opacity.opacity;from: 0.8; to: 0.2; dur: 3000; easing: easeInOutSine; loop: true; dir: alternate;" 
+      animation__rotate="property: rotation; to: 0 -120 0; dur: 1000; easing: easeInOutSine; loop: true; dir: alternate;">
+      </a-entity>
+      <a-entity id="fish2" gltf-model="#fish2_model" position="-1 -1.5 8.2" rotation="0 -60 0" scale="0.5 0.5 0.5"
+      animation__opacity="property: model-opacity.opacity;from: 0.8; to: 0.2; dur: 3000; easing: easeInOutSine; loop: true; dir: alternate;" 
+      animation__rotate="property: rotation; to: 0 -120 0; dur: 1000; easing: easeInOutSine; loop: true; dir: alternate;" >
+      </a-entity>
+      <a-entity id="fish3" gltf-model="#fish3_model" position="-2.5 -1.5 6.8" rotation="0 -60 0" scale="0.5 0.5 0.5"
+      animation__opacity="property: model-opacity.opacity;from: 0.8; to: 0.2; dur: 3000; easing: easeInOutSine; loop: true; dir: alternate;" 
+      animation__rotate="property: rotation; to: 0 -120 0; dur: 1000; easing: easeInOutSine; loop: true; dir: alternate;" >
+      </a-entity>
+      <a-entity gltf-model="#turtle_model" position="-24.3 0.24 21.7" rotation="-32.6 26.8 -1.8" scale="0.55 0.55 0.55"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="-45.6 0.5 21.3" rotation="150 19.4 -169" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="48.5 0.2 21" rotation="-36.5 0 0" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="-22.4 -0.67 -18.6" rotation="-7 158.5 17.9" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="-49.5 1 -22.5" rotation="19.6 0 0" scale="0.7 0.7 0.7"></a-entity>
+      <a-entity gltf-model="#turtle_model" position="25.5 1.57 -24.1" rotation="9.8 -24.7 -13.9" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="-18.5 2.8 23.5" rotation="-20 -164 -5.6" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="31 -1 19" rotation="-20 26 0" scale="1 1 1"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="58 1.2 24.6" rotation="171 -36 175" scale="0.88 0.88 0.88"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="-36.7 1.7 -25.4" rotation="0 0 0" scale="0.67 0.67 0.67"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="-52.9 -1.42 19.22" rotation="-22 -19 0" scale="0.5 0.5 0.5"></a-entity>
+      <a-entity gltf-model="#beaver_model" position="55.6 1.9 -28.5" rotation="-0.7 144.5 2" scale="0.8 0.8 0.8"></a-entity>
+      <!-- water -->
+      <a-plane position="0 0 0" rotation="-90 0 90" material="transparent: true; opacity: 0.2;"></a-plane> 
+      <a-entity position="0 98 0">
+        <a-entity class="ambient-sounds" sound="src: #river_sound; autoplay: true; loop: true;"></a-entity>
+        <a-plane position="0 0.3 0" rotation="-90 0 90" scale="1000 1000 1000" 
+          material="src: #water; color: #2eaaaa; offset: 0 0; repeat: 600 600; side: double; transparent: true; opacity: 0.1;"
+          displacement-map="#water-displacement"
+          displacement-bias="-0.1"
+          displacement-scale="0.0009"
+          displacement-texture-repeat="600 600"
+          segments-height="400"
+          segments-width="400"
+          replace
+          animation="property: components.material.material.map.offset.x; from: 0; to: 1; loop: true; dur: 20000; easing: linear;"
+          animation__2="property: components.material.material.map.offset.y; from: 0; to: 1; loop: true; dur: 50000; easing: linear;"
+          animation="property: material.offset.x; from: 0; to: 1; loop: true; dur: 50000; easing: linear;"
+        >
+        </a-plane>
+        <a-plane position="0 0 0" rotation="-90 0 90" scale="1000 1000 1000" 
+          material="src: #water; color: #2eaaaa; offset: 0 0; repeat: 600 600; side: double;"
+          displacement-map="#water-displacement"
+          displacement-bias="-0.1"
+          displacement-scale="0.0004"
+          displacement-texture-repeat="600 600"
+          segments-height="400"
+          segments-width="400"
+          replace
+          animation="property: components.material.material.map.offset.x; from: 0; to: -1; loop: true; dur: 60000; easing: linear;"
+          animation__2="property: components.material.material.map.offset.y; from: 0; to: -1; loop: true; dur: 20000; easing: linear;"
+        >
+        </a-plane>
+      </a-entity>
+    </a-entity>
+    
+
+    <!-- remaking the sky from environment component -->
+    <a-sky radius="200" theta-length="110" class="environment" material="shader: gradientshader; topColor: #22BDB2; bottomColor: #D4F7D5" visible="" geometry=""></a-sky>
+  </a-scene>
+</body>
+
 </html>
