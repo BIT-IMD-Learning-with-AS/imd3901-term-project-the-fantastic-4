@@ -7,9 +7,9 @@ This readme will be an introduction for your project. Please note how to use [Ma
 This is where you should write a brief intruction to yout project.
 
 ## How to Run This Project ##
-1. Download this project.
-2. Open project folder in Visual Studio Code
-3. Open a new terminal
+1. Download folder
+2. Open in Visual Studio Code
+3. Create a new terminal
 4. Initialize via npm
 ```html
   npm init
@@ -30,16 +30,17 @@ This is where you should write a brief intruction to yout project.
 ## Team Members and Roles ##
 
 - _Nabeeha Ali_
-  - Role 
-  - Link to portfolio
+  - Developer
+  - UX Designer 
 - _Ethan McIntyre_
-  - Role 
-  - Link to portfolio
+  - Developer 
+  - Sound Designer
 - _Avery Smith_
-  - Role 
-  - Link to portfolio
+  - Project Manager 
+  - 3D Artist
+  - UX Designer
 - _Amy Truong_
-  - Role 
-  - Link to portfolio
+  - 2D/3D Artist 
+  - UI/UX Designer
 
 
